@@ -1,74 +1,80 @@
 # Ordering at Mac Donald's
 eat_in = False
-aborted = False
 
 print("Welkom bij de Mac Donald's")
-question_1_str = input("Hier opeten of meenemen? [Opeten/Meenemen]: ")
-question_1 = question_1_str.upper()
-if question_1 == "OPETEN":
+
+def ask_question(question, valid_answers):
+    question_str = input(question)
+    question_upper = question_str.upper()
+    while question_upper not in valid_answers:
+        question_str = input(question)
+        question_upper = question_str.upper()
+    return question_upper
+
+def get_burger_choice():
+    valid_answer = ask_question("Burgers [Hamburger, Cheeseburger, Big Mac, Quarter Pounder]: ",
+                          ("HAMBURGER", "CHEESEBURGER", "BIG MAC", "QUARTER_POUNDER"))
+    if valid_answer == "HAMBURGER":
+        print("Hamburger")
+    elif valid_answer == "CHEESEBURGER":
+        print("Cheeseburger")
+    elif valid_answer == "BIG MAC":
+        print("Big Mac")
+    elif valid_answer == "QUARTER POUNDER":
+        print("Quarter Pounder")
+
+def get_hot_drink_choice():
+    valid_answer = ask_question("Warme drank: [Koffie, Cappucino, Chocolademelk]: ",
+                          ("KOFFIE", "CAPPUCINO", "CHOCOLADEMELK"))
+    if valid_answer == "KOFFIE":
+        print("Koffie")
+    elif valid_answer == "CAPPUCINO":
+        print("Cappucino")
+    elif valid_answer == "CHOCOLADEMELK":
+        print("Chocolademelk")
+
+
+def get_cold_drink_choice():
+    valid_answer = ask_question("Koude drank: [Coca Cola, Cola Zero, 7-Up, Fanta, Fristi]: ",
+                          ("COCA COLA", "COLA ZERO", "7-UP", "FANTA", "FRISTI"))
+    if valid_answer == "COCA COLA":
+        print("Coca Cola")
+    elif valid_answer == "COLA ZERO":
+        print("Cola Zero")
+    elif valid_answer == "7-UP":
+        print("7-Up")
+    elif valid_answer == "FANTA":
+        print("Fanta")
+    elif valid_answer == "FRISTI":
+        print("Fristi")
+
+answer = ask_question("Hier opeten of meenemen? [Opeten/Meenemen]: ",
+             ("OPETEN", "MEENEMEN"))
+
+if answer == "OPETEN":
     # Eat in part
     print("Hier opeten")
     eat_in = True
-elif question_1 == "MEENEMEN":
+elif answer == "MEENEMEN":
     # Take away part
     print("Meenemen")
     eat_in = False
-else:
-    aborted = True
 
-question_2_str = input("Burgers of drankjes? [Burgers/Drankjes]: ")
-question_2 = question_2_str.upper()
-if question_2 == "BURGERS":
-    question_3_str = input("Burgers [Hamburger, Cheeseburger, Bic Mac, Quarter Pounder]: ")
-    question_3 = question_3_str.upper()
-    if question_3 == "HAMBURGER":
-        print("Hamburger")
-    elif question_3 == "CHEESEBURGER":
-        print("Cheeseburger")
-    elif question_3 == "BIC MAC":
-        print("Big Mac")
-    elif question_3 == "QUARTER POUNDER":
-        print("Quarter Pounder")
-    else:
-        aborted = True
-elif question_2 == "DRANKJES":
-    question_4_str = input("Drankjes [Warme/Koude]: ")
-    question_4 = question_4_str.upper()
-    if question_4 == "WARME":
-        question_5_str = input("Warme drank: [Koffie, Cappucino, Chocolademelk]: ")
-        question_5 = question_5_str.upper()
-        if question_5 == "KOFFIE":
-            print("Koffie")
-        elif question_5 == "CAPPUCINO":
-            print("Cappucino")
-        elif question_5 == "CHOCOLADEMELK":
-            print("Chocolademelk")
-        else:
-            aborted = True
-    elif question_4 == "KOUDE":
-        question_6_str = input("Koude drank: [Coca Cola, Cola Zero, 7-Up, Fanta, Fristi]: ")
-        question_6 = question_6_str.upper()
-        if question_6 == "COCA COLA":
-            print("Coca Cola")
-        elif question_6 == "COLA ZERO":
-            print("Cola Zero")
-        elif question_6 == "7-UP":
-            print("7-Up")
-        elif question_6 == "FANTA":
-            print("Fanta")
-        elif question_6 == "FRISTI":
-            print("Fristi")
-        else:
-            aborted = True
-    else:
-        aborted = True
-else:
-    aborted = True
+answer = ask_question("Burgers of drankjes? [Burgers/Drankjes]: ",
+             ("BURGERS", "DRANKJES"))
 
-if aborted:
-    print("Abort, unknown input.")
+if answer == "BURGERS":
+    get_burger_choice()
+elif answer == "DRANKJES":
+    answer = ask_question("Drankjes [Warme/Koude]: ",
+                          ("WARME", "KOUDE"))
+    if answer == "WARME":
+        get_hot_drink_choice()
+
+    elif answer == "KOUDE":
+        get_cold_drink_choice()
+
+if eat_in:
+    print("Bedankt voor uw bestelling en eet smakelijk in ons restaurant.")
 else:
-    if eat_in:
-        print("Bedankt voor uw bestelling en eet smakelijk in ons restaurant.")
-    else:
-        print("Bedankt voor uw bestelling, goede reis en eet smakelijk.")
+    print("Bedankt voor uw bestelling, goede reis en eet smakelijk.")
