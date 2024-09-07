@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from students_classrooms import students_per_classroom
 
 # print(type(students_per_classroom))
@@ -13,9 +15,24 @@ def is_student_excellent(student):
             excellent = False
     return excellent
 
-def get_most_excellent_classroom():
+students = []
+for c_name in students_per_classroom:
+    for student in students_per_classroom[c_name]:
+        students.append(student)
+
+def get_excellent_students(list_of_students):
+        for st in list_of_students:
+            # print(student)
+            # print(student['naam'])
+            if is_student_excellent(st):
+                print(f"\t- {st['naam']}")
+
+def get_most_excellent_classroom(list_of_classrooms):
     classes = []
-    for c_name in students_per_classroom:
+    best_class_name = ""
+    best_class_percentage = 0
+    best_class_ex_students = 0
+    for c_name in list_of_classrooms:
         amount_students = 0
         amount_ex_students = 0
         for student in students_per_classroom[c_name]:
@@ -23,20 +40,52 @@ def get_most_excellent_classroom():
             if is_student_excellent(student):
                 amount_ex_students += 1
         classes.append({'klas': c_name, 'aantal_studenten':amount_students, 'aantal_ex_studenten':amount_ex_students})
-    # print(classes)
-    best_class = ("name", 0.0)
     for cl in classes:
         percentage = (cl['aantal_ex_studenten'] / cl['aantal_studenten']) * 100
-        if percentage > best_class[1]:
-            best_class = (cl['klas'], percentage)
-        print(f"{cl['klas']}  {percentage}%")
-    print(f"Beste klass is: {best_class[0]}")
+        if percentage > best_class_percentage:
+            best_class_percentage = percentage
+            best_class_name = cl['klas']
+            best_class_ex_students = cl['aantal_ex_studenten']
+    print(f"Klas met de meeste excellente studenten:\n \t -{best_class_name} met {best_class_ex_students} excellente studenten")
 
-for c_name in students_per_classroom:
-    for student in students_per_classroom[c_name]:
-        # print(student)
-        # print(student['naam'])
-        if is_student_excellent(student):
-            print(f"Student: {student['naam']} is excellent")
+def get_score_score_student(student):
+    score = 0
+    results = student['resultaten'].values()
+    for result in results:
+        if result == "uitmunten":
+            score += 4
+        elif result == "goed":
+            score += 3
+        elif result == "voldoende":
+            score += 2
+        elif result == "onvoldoende":
+            score += 0
+    return score
 
-get_most_excellent_classroom()
+def get_best_scoring_classroom(list_of_classrooms):
+    class_name = ""
+    class_score = 0
+    for c_name in list_of_classrooms:
+        score = 0
+        for student in students_per_classroom[c_name]:
+            score = get_score_score_student(student)
+        if score > class_score:
+            class_name = c_name
+            class_score = score
+    print(f"Klas met de hoogste scores gemiddeld:\n \t -{class_name} met {class_score} punten")
+
+def get_failed_students(list_of_students, minimum_score = 4):
+    for st in list_of_students:
+        if get_score_score_student(st) < minimum_score:
+            print(f"\t- {st['naam']}")
+            for result in st['resultaten']:
+                print(f"\t\t{result}: {st['resultaten'][result]}")
+
+
+print(f"------ Rapport {datetime.today().strftime('%d-%m-%Y')} ------")
+print("Excellente studenten: ")
+get_excellent_students(students)
+print()
+get_most_excellent_classroom(students_per_classroom)
+get_best_scoring_classroom(students_per_classroom)
+get_failed_students(students, 3)
