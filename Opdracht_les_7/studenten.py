@@ -15,10 +15,12 @@ def is_student_excellent(student):
             excellent = False
     return excellent
 
-students = []
-for c_name in students_per_classroom:
-    for student in students_per_classroom[c_name]:
-        students.append(student)
+def get_all_students():
+    students_list = []
+    for c_name in students_per_classroom:
+        for student in students_per_classroom[c_name]:
+            students_list.append(student)
+    return students_list
 
 def get_excellent_students(list_of_students):
         for st in list_of_students:
@@ -28,7 +30,6 @@ def get_excellent_students(list_of_students):
                 print(f"\t- {st['naam']}")
 
 def get_most_excellent_classroom(list_of_classrooms):
-    classes = []
     best_class_name = ""
     best_class_percentage = 0
     best_class_ex_students = 0
@@ -39,13 +40,11 @@ def get_most_excellent_classroom(list_of_classrooms):
             amount_students += 1
             if is_student_excellent(student):
                 amount_ex_students += 1
-        classes.append({'klas': c_name, 'aantal_studenten':amount_students, 'aantal_ex_studenten':amount_ex_students})
-    for cl in classes:
-        percentage = (cl['aantal_ex_studenten'] / cl['aantal_studenten']) * 100
+        percentage = amount_students / amount_ex_students * 100
         if percentage > best_class_percentage:
+            best_class_name = c_name
             best_class_percentage = percentage
-            best_class_name = cl['klas']
-            best_class_ex_students = cl['aantal_ex_studenten']
+            best_class_ex_students = amount_ex_students
     print(f"Klas met de meeste excellente studenten:\n \t -{best_class_name} met {best_class_ex_students} excellente studenten")
 
 def get_score_score_student(student):
@@ -84,8 +83,12 @@ def get_failed_students(list_of_students, minimum_score = 4):
 
 print(f"------ Rapport {datetime.today().strftime('%d-%m-%Y')} ------")
 print("Excellente studenten: ")
+students = get_all_students()
 get_excellent_students(students)
 print()
 get_most_excellent_classroom(students_per_classroom)
+print()
 get_best_scoring_classroom(students_per_classroom)
+print()
+print("Studenten met inhaalopdracht:")
 get_failed_students(students, 3)
